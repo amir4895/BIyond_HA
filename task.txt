@@ -1,0 +1,39 @@
+# PYTHON Dev. Interview Task:
+
+# Scenario: You need to provide a server that mimics an ETL (extract-transfer-load) process.
+# The server will receive arrays of file names through an open port (8081) and use these files for
+# a “fake”:
+
+# load operation (no files exist).
+# • The server will handle a maximum of 4 load requests simultaneously with 40 sec timeout each.
+# • Each request, encoded as a JSON, contains an array of filenames.
+# • These file names should be loaded into a table by appending their names to it*.
+# • The server sends a heartbeat as TIMESTAMP, into a database of your choice every min (such
+# as
+# PostgreSQL) .
+
+
+# • There’s a 10% chance a load contains a corrupt file**.
+
+
+# Load*
+# Each request coming in through the open port as a consists array of strings. These strings are
+# supposedly file names. But, we aren’t loading actual files as they don’t exist. Instead, we’ll
+# simply take their names and append them to a table in database. The table structure and name
+# is per your choice.
+
+
+# Corrupt file**
+# Each load request has a 10% chance of having one corrupted file. This corruption prevents the
+# file from being loaded.
+# Before each request starts, you’ll “roll the dice” for this to corruption to occur. Implement it in any
+# way you like, A couple of ideas are:
+# Filenames for load are objects containing an attribute “corrupt” or
+# filenames are within a 2-item tuple in which the second item is a Boolean corrupt/not-corrupt.
+# The goal is to catch an exception during the load operation and find which file caused the
+# exception. Remember that, ultimately, we want to load all good files.
+# Pay attention to coding standards. Add appropriate comments, keep the code readable and, if
+# all else fails, import this.
+
+
+# Good luck and have fun.
