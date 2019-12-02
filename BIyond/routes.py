@@ -13,12 +13,12 @@ api = Api(app)
 executor = Executor(app)
 
 
-class ETLPost(Resource):
+class FilesUpload(Resource):
     def post(self):
         jsn = request.get_json()
         jsn_data = jsn.get("filenames")
         if not jsn_data or type(jsn_data) != list:
-            return Response(status=204)
+            return Response(status=400)
         corrupted_chance = randrange(0, 9)
         corrupt = True if corrupted_chance == 0 else False
         new_request = executor.submit(analyze_json, file_names_list=jsn_data, is_corrupt=corrupt)
@@ -26,7 +26,7 @@ class ETLPost(Resource):
         return Response(status=202)
 
 
-api.add_resource(ETLPost, '/etl')
+api.add_resource(FilesUpload, '/files_upload')
 api.init_app(app)
 
 

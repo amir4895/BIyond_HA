@@ -7,14 +7,14 @@ class File(db.Model):
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<file {} last update {}>'.format(self.filename, self.date)
+        return f'<file {self.filename} last update {self.date}>'
 
 
 class Heartbeat(db.Model):
     date = db.Column(db.DateTime, primary_key=True, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<User {}>'.format(self.date)
+        return f'<Heartbeat {self.date}>'
 
 
 class TimeoutRequests(db.Model):
@@ -22,6 +22,6 @@ class TimeoutRequests(db.Model):
     file_list = db.Column(db.String(120))
 
     def __repr__(self):
-        return '<TimeoutRequests {}>'.format(self.id)
+        return f'<TimeoutRequests {self.id}>'
 
 

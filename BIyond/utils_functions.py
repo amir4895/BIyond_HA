@@ -1,8 +1,11 @@
 import timeout_decorator
+from datetime import datetime
+
 from random import randrange
 from BIyond import db, requests_queue, ETL_REQUEST_TIMEOUT
 from BIyond.models import Heartbeat, TimeoutRequests, File
 from timeout_decorator.timeout_decorator import TimeoutError as decTimeout
+from sqlalchemy.sql import exists
 
 
 def send_heartbeat():
@@ -20,7 +23,7 @@ def monitor_timout_events():
                 requests_queue.remove(request_obj)
         except decTimeout:
             requests_queue.remove(request_obj)
-            update_db_with_new_timeout_request(files=data)
+            update_db_with_new_timeout_request(files=str(data))
 
 
 def update_db_with_new_timeout_request(files="empty_string"):
@@ -34,17 +37,21 @@ def analyze_json(file_names_list, is_corrupt):
     num_files_in_request = len(file_names_list)-1
     if not num_files_in_request:
         return
-    defected_index = None
+    corrupted_index = None
     if is_corrupt:
-        defected_index = randrange(num_files_in_request)
+        corrupted_index = randrange(num_files_in_request)
 
     for idx, file in enumerate(file_names_list):
-        if is_corrupt and idx == defected_index:
+        if is_corrupt and idx == corrupted_index:
             continue
         else:
-            # TODO check in DB before for update or insert same file more the once
-            new_file = File(filename=file)
-            db.session.add(new_file)
+            is_exists = db.session.query(exists().where(File.filename == file)).scalar()
+            if is_exists:
+                existing_file = File.query.filter_by(filename=file).first()
+                existing_file.date = datetime.utcnow()
+            else:
+                new_file = File(filename=file)
+                db.session.add(new_file)
     db.session.commit()
 
 
