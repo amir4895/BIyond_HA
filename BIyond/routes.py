@@ -24,7 +24,7 @@ class FilesUpload(Resource):
             return Response(status=400)
         corrupted_chance = randrange(0, 9)
         corrupt = True if corrupted_chance == 0 else False
-        new_request = executor.submit(analyze_json, file_names_list=jsn_data, is_corrupt=corrupt)
+        new_request = executor.submit(analyze_json, file_path_list=jsn_data, is_corrupt=corrupt)
         requests_queue.append(RequestQueueObject(new_request, jsn_data))
         return Response(status=202)
 
