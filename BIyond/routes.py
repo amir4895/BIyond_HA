@@ -14,6 +14,9 @@ executor = Executor(app)
 
 
 class FilesUpload(Resource):
+    """
+    post handler for uploading files <host path>/FilesUpload
+    """
     def post(self):
         jsn = request.get_json()
         jsn_data = jsn.get("filenames")
@@ -26,7 +29,7 @@ class FilesUpload(Resource):
         return Response(status=202)
 
 
-api.add_resource(FilesUpload, '/files_upload')
+api.add_resource(FilesUpload, '/FilesUpload')
 api.init_app(app)
 
 
