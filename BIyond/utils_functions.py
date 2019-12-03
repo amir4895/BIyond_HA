@@ -9,12 +9,18 @@ from sqlalchemy.sql import exists
 
 
 def send_heartbeat():
+    """
+    keepalive function
+    """
     new_heartbeat = Heartbeat()
     db.session.add(new_heartbeat)
     db.session.commit()
 
 
 def monitor_timout_events():
+    """
+    function that monitor the requests_queue, clean the acknowledged request , update db with timeout requests
+    """
     for request_obj in requests_queue:
         try:
             request = request_obj.future_ps
@@ -27,21 +33,31 @@ def monitor_timout_events():
 
 
 def update_db_with_new_timeout_request(files="empty_string"):
+    """
+    :param files: updating db with timeout request with "files" from the requests
+    """
     new_timeout_request = TimeoutRequests(file_list=files)
     db.session.add(new_timeout_request)
     db.session.commit()
 
 
 @timeout_decorator.timeout(ETL_REQUEST_TIMEOUT, use_signals=False)
-def analyze_json(file_names_list, is_corrupt):
-    num_files_in_request = len(file_names_list)-1
+def analyze_json(file_path_list, is_corrupt):
+    """
+    Background function to handle file upload requests in order to support "parallel" requests for upload
+    :param(List) file_path_list: list of file paths
+    :param(bool) is_corrupt:
+    :return: analyze the request and update db accordingly, if got timeout will be handle in  monitor_timout_events func
+    """
+
+    num_files_in_request = len(file_path_list) - 1
     if not num_files_in_request:
         return
     corrupted_index = None
     if is_corrupt:
         corrupted_index = randrange(num_files_in_request)
 
-    for idx, file in enumerate(file_names_list):
+    for idx, file in enumerate(file_path_list):
         if is_corrupt and idx == corrupted_index:
             continue
         else:
