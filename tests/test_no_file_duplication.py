@@ -24,7 +24,7 @@ def test_no_file_duplication(server_url):
 
     # insert new batch of files and validate change in file table
 
-    files = generate_files(number_of_files=5, length=5)
+    files = generate_files(number_of_files=1, length=200)  # "path" is 200 to make sure new entry in db will be created
     data = {"filenames": files}
     post_status = requests.post(url=server_url, json=data)
     assert post_status.status_code == 202
