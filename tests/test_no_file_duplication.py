@@ -4,7 +4,12 @@ from BIyond.models import File
 from BIyond import db
 from time import sleep
 
+
 def test_no_file_duplication(server_url):
+    """
+    :param server_url: pytest fixture with post address
+    :return: assert on fail
+    """
     files = generate_files(number_of_files=5, length=5)
     data = {"filenames": files}
     post_status = requests.post(url=server_url, json=data)

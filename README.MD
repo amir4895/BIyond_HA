@@ -8,8 +8,9 @@
 #7.If file is uploaded twice it will be replaced with the newer version
 #  (therefor we need to query for each new file before insert)
 #8.In order to run tests folder 
-#          - run flak aap with <path>run.sh
-#          - run pytets in IDE (Or terminal run with pytest command)
+#          - run flak aap with <BIyond>.run.py
+#          - run pytets in IDE (Or terminal run with pytest command) for all "tests" folder or specific test 
+#          - tests parameters can defined with tests.test_params.py
 #Regards
 #Amir
 

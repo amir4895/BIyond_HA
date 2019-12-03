@@ -1,6 +1,10 @@
 import random
 import string
 
+"""
+Helper functions file for pytest 
+"""
+
 
 def generate_files(number_of_files=1, length=5):
     files_list = []
